@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
-import dynamic from "next/dynamic";
 
 const font = Poppins({
   weight: "600",
@@ -63,6 +62,32 @@ export default function Navbar() {
     window.wallet = { isConnected: false, address: undefined }; // Clear wallet state globally
   };
 
+  // NFC scanning function with correct typing
+  const scanNfc = async () => {
+    if ("NFC" in navigator) {
+      try {
+        // TypeScript requires us to cast this to a known type
+        const nfcScanner = (navigator as any).NFC // Type cast to any to bypass the NFC type error
+
+        nfcScanner.addEventListener("nfcmessage", (event: any) => {
+          const nfcTag = event.message; // Get the message from the event
+          const walletAddress = nfcTag?.data; // Assuming data contains wallet address
+          
+          if (walletAddress) {
+            setSelectedAccount({ address: walletAddress } as InjectedAccountWithMeta);
+            window.wallet = { isConnected: true, address: walletAddress };
+          }
+        });
+
+        await nfcScanner.start();
+      } catch (error) {
+        console.error("NFC scanning failed:", error);
+      }
+    } else {
+      alert("NFC not supported on this device.");
+    }
+  };
+
   useEffect(() => {
     setIsMounted(true);
 
@@ -70,6 +95,9 @@ export default function Navbar() {
     if (window.wallet?.isConnected) {
       setSelectedAccount({ address: window.wallet.address } as InjectedAccountWithMeta);
     }
+
+    // Start NFC scan when the component mounts
+    scanNfc();
   }, []);
 
   if (!isMounted) return null;
