@@ -1,13 +1,23 @@
 "use client";
-import React, { useState } from 'react';
-import Select from 'react-select';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import styled from "styled-components";
+
+// Extend the Window interface to include the `wallet` property
+declare global {
+  interface Window {
+    wallet?: {
+      isConnected: boolean;
+      address?: string;
+    };
+  }
+}
 
 // Define the options for the dropdown
 const tokenOptions = [
   { label: "Vara", value: "Vara" },
   { label: "WrappedETH", value: "WrappedETH" },
-  { label: "WrappedBTC", value: "WrappedBTC" }
+  { label: "WrappedBTC", value: "WrappedBTC" },
 ];
 
 const BucketComponent = () => {
@@ -15,6 +25,15 @@ const BucketComponent = () => {
   const [percentages, setPercentages] = useState<{ [key: string]: number }>({});
   const [error, setError] = useState<string>("");
   const [buckets, setBuckets] = useState<Array<{ [key: string]: number }>>([]);
+  const [investmentAmount, setInvestmentAmount] = useState<number | "">("");
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Set wallet address if connected
+    if (window.wallet?.isConnected) {
+      setWalletAddress(window.wallet.address || null);
+    }
+  }, []);
 
   const handleTokenChange = (selected: any) => {
     const selectedValues = selected ? selected.map((item: { value: string }) => item.value) : [];
@@ -36,18 +55,50 @@ const BucketComponent = () => {
     }
     setError("");
     setBuckets((prev) => [...prev, percentages]);
-    setPercentages({}); // Reset the percentages after creating a bucket
-    setSelectedTokens([]); // Reset the selected tokens after creating a bucket
+    setPercentages({});
+    setSelectedTokens([]);
   };
 
-  const handleInvest = (bucketIndex: number) => {
-    alert(`Investing in Bucket #${bucketIndex + 1}`);
+  const handleInvest = async (bucketIndex: number) => {
+    if (!walletAddress) {
+      alert("Please connect your wallet to proceed.");
+      return;
+    }
+
+    if (!investmentAmount) {
+      alert("Please enter the investment amount.");
+      return;
+    }
+
+    const bucket = buckets[bucketIndex];
+    try {
+      const response = await fetch("/api/transaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bucket,
+          amount: investmentAmount,
+          walletAddress, // Include wallet address in the transaction
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log("Transaction created:", result);
+        alert("Transaction successfully created!");
+      } else {
+        console.error("Error creating transaction:", result.error);
+        alert("Failed to create transaction. Check console for details.");
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      alert("An error occurred. Check the console for details.");
+    }
   };
 
   return (
     <Container>
       <Title>Create a Token Bucket</Title>
-
       <Select
         isMulti
         options={tokenOptions}
@@ -56,7 +107,6 @@ const BucketComponent = () => {
         placeholder="Select Tokens"
         styles={customSelectStyles}
       />
-
       {selectedTokens.map((token) => (
         <InputWrapper key={token}>
           <Label>{token} Percentage:</Label>
@@ -69,13 +119,10 @@ const BucketComponent = () => {
           />
         </InputWrapper>
       ))}
-
       {error && <ErrorMessage>{error}</ErrorMessage>}
-
       <ButtonWrapper>
         <SubmitButton onClick={handleSubmit}>Create Bucket</SubmitButton>
       </ButtonWrapper>
-
       <BucketsWrapper>
         {buckets.map((bucket, index) => (
           <BucketDiv key={index}>
@@ -87,6 +134,15 @@ const BucketComponent = () => {
                 </TokenItem>
               ))}
             </TokenList>
+            <InputWrapper>
+              <Label>Investment Amount:</Label>
+              <PercentageInput
+                type="number"
+                value={investmentAmount || ""}
+                onChange={(e) => setInvestmentAmount(Number(e.target.value))}
+                min={0}
+              />
+            </InputWrapper>
             <InvestButton onClick={() => handleInvest(index)}>Invest</InvestButton>
           </BucketDiv>
         ))}
@@ -96,6 +152,12 @@ const BucketComponent = () => {
 };
 
 export default BucketComponent;
+
+// Styled components
+const InvestmentSection = styled.div`
+  margin-top: 20px;
+`;
+
 
 // Styled components
 const Container = styled.div`

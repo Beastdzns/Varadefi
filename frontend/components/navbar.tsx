@@ -9,104 +9,96 @@ import { ModeToggle } from "@/components/mode-toggle";
 import MobileSidebar from "@/components/mobile-sidebar";
 
 import { useEffect, useState } from "react";
-import { Plus, Settings, StoreIcon, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import dynamic from 'next/dynamic';
-
-// @ts-ignore
-const web3Accounts = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
-// @ts-ignore
-const web3Enable = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import dynamic from "next/dynamic";
 
 const font = Poppins({
-    weight: "600",
-    subsets: ['latin']
-})
+  weight: "600",
+  subsets: ["latin"],
+});
 
 const routes = [
-    {
-        icon: User2,
-        href: "/chat",
-        label: "Dashboard",
-        logined: true,
-    },
-    {
-        href: "/twilo",
-        label: "Call AI",
-    },
-    {
-        href: "/bucket",
-        label: "Bucket",
-    },
-]
+  { href: "/chat", label: "Dashboard" },
+  { href: "/twilo", label: "Call AI" },
+  { href: "/bucket", label: "Bucket" },
+];
+
+declare global {
+  interface Window {
+    wallet?: {
+      isConnected: boolean;
+      address?: string;
+    };
+  }
+}
 
 export default function Navbar() {
+  const router = useRouter();
+  const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-    const router = useRouter();
+  const connectWalletFunc = async () => {
+    const { web3Enable, web3Accounts } = await import("@polkadot/extension-dapp");
+    const extensions = await web3Enable("WhisperCash");
 
-    const [account, setAccount] = useState<InjectedAccountWithMeta[]>([]);
-    const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(null);
-
-    const [isMounted, setIsMounted] = useState(false);
-
-    async function connectWalletFunc() {
-        const { web3Enable, web3Accounts } = await import("@polkadot/extension-dapp");
-        const extensions = await web3Enable("WhispherCash");
-
-        if (extensions.length === 0) {
-            alert("No Extension Found");
-        }
-
-        const allAccounts = await web3Accounts();
-
-        console.log(allAccounts);
-
-        if (allAccounts.length === 1) {
-            setSelectedAccount(allAccounts[0]);
-        }
+    if (extensions.length === 0) {
+      alert("No Extension Found");
+      return;
     }
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, [])
+    const allAccounts = await web3Accounts();
+    if (allAccounts.length > 0) {
+      setSelectedAccount(allAccounts[0]);
+      window.wallet = {
+        isConnected: true,
+        address: allAccounts[0].address, // Persist the wallet address globally
+      };
+    }
+  };
 
-    if (!isMounted) return null;
+  const disconnectWalletFunc = () => {
+    setSelectedAccount(null);
+    window.wallet = { isConnected: false, address: undefined }; // Clear wallet state globally
+  };
 
-    return (
-        <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 border-b border-primary/10 bg-secondary h-16">
-            <div className="flex items-center">
-                <div className="flex md:hidden">
-                    <MobileSidebar />
-                </div>
-                <Link
-                    href="/"
-                >
-                    <Logo />
-                </Link>
-            </div>
+  useEffect(() => {
+    setIsMounted(true);
 
-            <div className="flex items-center gap-x-3">
-                <div className="hidden md:flex gap-6 pr-20">
-                    {routes.map((route) => {
-                        return (
-                            <Button variant="ghost" onClick={() => router.push(route.href)} key={route.href}>
-                                <h1 className={cn("font-bold text-lg cursor-pointer", font.className)} >
-                                    {route.label}
-                                </h1>
-                            </Button>
-                        )
-                    })}
-                </div>
-                <Button size="sm" onClick={() => connectWalletFunc()}>
-                    {selectedAccount === null ? 'Connect' : 'Disconnect'}
-                    <Wallet
-                        className="h-4 w-4 fill-white ml-2"
-                    />
-                </Button>
-                <ModeToggle />
-            </div>
+    // Check for persistent wallet connection on load
+    if (window.wallet?.isConnected) {
+      setSelectedAccount({ address: window.wallet.address } as InjectedAccountWithMeta);
+    }
+  }, []);
+
+  if (!isMounted) return null;
+
+  return (
+    <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 border-b border-primary/10 bg-secondary h-16">
+      <div className="flex items-center">
+        <div className="flex md:hidden">
+          <MobileSidebar />
         </div>
-    )
+        <Link href="/">
+          <Logo />
+        </Link>
+      </div>
+
+      <div className="flex items-center gap-x-3">
+        <div className="hidden md:flex gap-6 pr-20">
+          {routes.map((route) => (
+            <Button variant="ghost" onClick={() => router.push(route.href)} key={route.href}>
+              <h1 className={cn("font-bold text-lg cursor-pointer", font.className)}>{route.label}</h1>
+            </Button>
+          ))}
+        </div>
+        <Button size="sm" onClick={selectedAccount ? disconnectWalletFunc : connectWalletFunc}>
+          {selectedAccount ? `Disconnect (${selectedAccount.meta.name || "Wallet"})` : "Connect"}
+          <Wallet className="h-4 w-4 fill-white ml-2" />
+        </Button>
+        <ModeToggle />
+      </div>
+    </div>
+  );
 }
