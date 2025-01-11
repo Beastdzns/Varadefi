@@ -8,33 +8,41 @@ Our project aims to address several critical challenges in the crypto space by o
 
 Additionally, the integration of a call bot for account management allows users to manage their investments via phone calls, providing an easy and accessible way to interact for those who prefer voice communication.
 
+🚀 Project Overview
+This project consists of three main components:
+
+Frontend: The user interface to manage and monitor your investments.
+Call AI Agent: A voice-based interaction system for managing accounts, powered by Twilio.
+Rust Smart Contracts: High-performance blockchain contracts for secure, transparent operations.
+
+
+
+
 Steps to Run the Project
-------------------------
-
-### Frontend
-
-1.  Navigate to the frontend/ directory.
-    
-2.  npm install
-    
-3.  npm run dev
-    
-
-### Deploying the Smart Contract
-
-1.  Navigate to the contract/ directory.
-    
-2.  Download and install [Rust](https://www.rust-lang.org/).
-    
-3.  cargo build --release
-    
-4.  Go to the target/wasm32-unknown-unknown/release folder and upload app\_name.opt.wasm as the program on the Vara Network.
-    
-5.  Upload the .idl file as metadata.
-    
-
-Your smart contract is now deployed and ready to use.
-
+🛠️ Setup Requirements
+1. Frontend Prerequisites
+Node.js (latest LTS version).
+.env file in the frontend directory with the following key:
+plaintext
+Copy code
+OPENAI_API_KEY=<your_openai_api_key>  
+2. Call AI Agent Prerequisites
+Python 3.9 or above.
+Twilio credentials and phone numbers:
+plaintext
+Copy code
+TWILIO_ACCOUNT_SID=<your_twilio_account_sid>  
+TWILIO_AUTH_TOKEN=<your_twilio_auth_token>  
+TWILIO_PHONE_NUMBER=<your_twilio_phone_number>  
+USER_PHONE_NUMBER=<your_phone_number>  
+Gemini API keys for integration:
+plaintext
+Copy code
+GEMINI_API_KEY=<your_gemini_api_key>  
+GEMINI_API_SECRET=<your_gemini_api_secret>  
+3. Rust Smart Contracts Prerequisites
+Rust (latest stable version).
+Cargo (Rust package manager).
 Tech Stack Used
 ---------------
 
