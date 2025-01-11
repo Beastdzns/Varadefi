@@ -2,10 +2,10 @@ import requests
 from twilio.rest import Client
 
 # Twilio credentials
-account_sid = 'ACb06c9baad443fc7ec1381cbfebdd2722'  # Your Twilio Account SID
-auth_token = '662af479bee5cd5ee54e611dcc82e012'   # Your Twilio Auth Token
-twilio_phone_number = '+15704389358'  # Your Twilio phone number
-to_phone_number = '885649368'  # Your verified phone number (with country code)
+account_sid = ''  # Your Twilio Account SID
+auth_token = ''   # Your Twilio Auth Token
+twilio_phone_number = ''  # Your Twilio phone number
+to_phone_number = ''  # Your verified phone number (with country code)
 
 # Wallet address
 wallet_address = '5CvbeMNoxZapSqk8gmdUxHQ4m85FdcHhsydG18ZWKTYRUzhv'
