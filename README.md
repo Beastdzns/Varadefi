@@ -13,9 +13,9 @@ Steps to Run the Project
 
 1.  Navigate to the frontend/ directory.
     
-2.  bashCopy codenpm install
+2.  npm install
     
-3.  bashCopy codenpm run dev
+3.  npm run dev
     
 
 ### Deploying the Smart Contract
@@ -24,7 +24,7 @@ Steps to Run the Project
     
 2.  Download and install [Rust](https://www.rust-lang.org/).
     
-3.  bashCopy codecargo build --release
+3.  cargo build --release
     
 4.  Go to the target/wasm32-unknown-unknown/release folder and upload app\_name.opt.wasm as the program on the Vara Network.
     
