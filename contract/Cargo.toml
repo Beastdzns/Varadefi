@@ -1,0 +1,45 @@
+[workspace.package]
+homepage = "https://wiki.gear-tech.io/docs/examples/prerequisites"
+version = "0.1.0"
+license = "MIT"
+edition = "2021"
+publish = false
+
+[package]
+name = "TokenTechiesContract"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+gstd.workspace = true
+io.workspace = true
+parity-scale-codec.workspace = true
+scale-info.workspace = true
+
+[build-dependencies]
+gear-wasm-builder.workspace = true
+io.workspace = true
+
+[dev-dependencies]
+gtest.workspace = true
+gclient.workspace = true
+tokio.workspace = true
+
+# It's necessary to include all metawasm crates in the workspace section, otherwise they'll be
+# ignored by Cargo and won't be built.
+[workspace]
+members = ["state"]
+
+[workspace.dependencies]
+gstd = { git = "https://github.com/gear-tech/gear", tag = "v1.1.0" }
+gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.0" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear", tag = "v1.1.0" }
+gtest = { git = "https://github.com/gear-tech/gear", tag = "v1.1.0"   }
+gclient = { git = "https://github.com/gear-tech/gear",tag = "v1.1.0"  }
+parity-scale-codec = { version = "3", default-features = false }
+scale-info = { version = "2", default-features = false }
+io.path = "io"
+tokio = "1"
+xshell = "0.2"
+anyhow = "1"
