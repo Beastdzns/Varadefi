@@ -1,0 +1,19 @@
+{
+  "name": "accbal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@goat-sdk/plugin-erc20": "^0.2.7",
+    "@polkadot/api": "^15.2.1",
+    "goat-repo": "github:goat-sdk/goat",
+    "twilio": "^5.4.1",
+    "web3": "^4.16.0"
+  }
+}
