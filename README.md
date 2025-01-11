@@ -4,7 +4,9 @@ Project README
 Overview
 --------
 
-Our project aims to address several critical challenges in the crypto space by offering a crypto mutual fund solution. It allows users to invest in a diversified portfolio of tokens at a fixed investment price, simplifying the investment process. The project also integrates AI to help users optimize their portfolios and manage their wallets, offering personalized recommendations and insights for better decision-making. Additionally, the integration of a call bot for account management allows users to manage their investments via phone calls, providing an easy and accessible way to interact for those who prefer voice communication.
+Our project aims to address several critical challenges in the crypto space by offering a crypto mutual fund solution. It allows users to invest in a diversified portfolio of tokens at a fixed investment price, simplifying the investment process. The project also integrates AI to help users optimize their portfolios and manage their wallets, offering personalized recommendations and insights for better decision-making. The integration of OpenAI and Gemini for advanced AI-driven portfolio management is facilitated through the use of the Goat SDK.
+
+Additionally, the integration of a call bot for account management allows users to manage their investments via phone calls, providing an easy and accessible way to interact for those who prefer voice communication.
 
 Steps to Run the Project
 ------------------------
@@ -49,3 +51,9 @@ Tech Stack Used
 *   **Spline**
     
 *   **Twilio**
+  
+*   **GoatSDK**
+
+*   **Gemini**
+
+*   **GPT-4**
