@@ -4,10 +4,10 @@ import axios from 'axios';
 import Web3 from 'web3';
 
 // Twilio credentials
-const accountSid = 'ACb06c9baad443fc7ec1381cbfebdd2722';  // Twilio Account SID
-const authToken = '662af479bee5cd5ee54e611dcc82e012';    // Twilio Auth Token
-const twilioPhoneNumber = '+15704389358';  // Your Twilio phone number
-const toPhoneNumber = '8856849368';  // Your phone number (make sure it's verified in Twilio)
+const accountSid = '';  // Twilio Account SID
+const authToken = '';    // Twilio Auth Token
+const twilioPhoneNumber = '';  // Your Twilio phone number
+const toPhoneNumber = '';  // Your phone number (make sure it's verified in Twilio)
 
 // The Polkadot address you want to check balance for
 const address = '5CvbeMNoxZapSqk8gmdUxHQ4m85FdcHhsydG18ZWKTYRUzhv';  // Replace with your Polkadot address
@@ -21,7 +21,7 @@ const GEMINI_API_KEY = 'AIzaSyA9eT4Jj0w-R93eNPmg-nG3mEia9puxVc8'; // Your Gemini
 const geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'; // Gemini API URL
 
 // Initialize web3 with an Infura or Alchemy endpoint (Ethereum Mainnet)
-const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/6614ce422d5847bcaff419e78a02a989'));
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/')); // INFURA API KEY 
 
 // ERC20 Token ABI (Standard ABI for ERC20 token balanceOf method)
 const erc20Abi = [
