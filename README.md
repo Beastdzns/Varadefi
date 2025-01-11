@@ -63,6 +63,9 @@ For building and deploying Rust smart contracts, ensure the following:
 - **Cargo** (Rust package manager).
 
 ---
+![WhatsApp Image 2025-01-12 at 01 40 49_ac1fadf3](https://github.com/user-attachments/assets/031a37d2-de48-4a8c-9b9e-5810a74b5a6c)
+
+
 
 ## 💻 **Tech Stack Used**  
 
